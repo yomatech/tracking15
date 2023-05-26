@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_country_state_form_township" model="ir.ui.view">
+            <field name="name">res.country.state.form.township</field>
+            <field name="model">res.country.state</field>
+            <field name="inherit_id" ref="base.view_country_state_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="replace">
+
+                    <form string="State">
+                        <div class="oe_button_box">
+                        </div>
+
+                        <group>
+                            <group>
+
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="country_id" options='{"no_open": True}'/>
+
+                            </group>
+                        </group>
+                        <label for="city_ids"/>
+                        <field name="city_ids">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </form>
+
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

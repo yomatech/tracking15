@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <record id="view_way_points_tree" model="ir.ui.view">
+        <field name="name">res.partner.tree</field>
+        <field name="model">res.partner</field>
+        <field eval="1" name="priority"/>
+        <field name="arch" type="xml">
+            <tree string="Way Points">
+                <field name="display_name" string="Name"/>
+                <field name="phone" />
+                <field name="street" />
+                <field name="street2" />
+                <field name="town" />
+                <field name="city" />
+                <field name="state_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id='fleet_trip_route_view_form' model='ir.ui.view'>
+        <field name="name">fleet.route.form</field>
+        <field name="model">fleet.route</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle Route">
+                <header>
+                </header>
+                <sheet>
+
+                    <div class="oe_button_box" name="button_box">
+
+                        <button type="object"
+                                class="oe_stat_button"
+                                name="count_waypoints"
+                                icon="fa-map-marker">
+                            <field name="partner_count" widget="statinfo" string="Way Points"/>
+                        </button>
+
+                    </div>
+
+                    <div class="oe_title">
+
+                        <h1>
+                            <field name="name" placeholder="Vehicle Route Name" required="1"/>
+                        </h1>
+                    </div>
+
+                    <group col="2">
+                        <group>
+                            <field name="starting_point" />
+                        </group>
+                        <group>
+                            <field name="ending_point" />
+                        </group>
+                    </group>
+
+                    <notebook colspan="2">
+
+                        <page string="Way Points">
+
+                            <field name="partner_ids"
+                                   colspan="4"
+                                   nolabel="1"
+                                   widget="many2many"
+                                   context="{'tree_view_ref': 'view_way_points_tree'}"
+                                   options="{'no_open':True,'no_create':1,'no_create_edit':1}">
+                            </field>
+
+                            <field name="map"
+                                   readonly="1"
+                                   widget="google_map"
+                                   nolabel="1"/>
+
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='fleet_trip_route_view_tree' model='ir.ui.view'>
+        <field name="name">fleet.route.tree</field>
+        <field name="model">fleet.route</field>
+        <field name="arch" type="xml">
+            <tree string="Vehicle Route">
+                <field name="name"/>
+                <field name="starting_point" />
+                <field name="ending_point" />
+                <field name="partner_count" />
+            </tree>
+        </field>
+    </record>
+
+    <record id='fleet_trip_route_action' model='ir.actions.act_window'>
+        <field name="name">Vehicle Route</field>
+        <field name="res_model">fleet.route</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Routes" action="fleet_trip_route_action" id="menu_fleet_route" parent="menu_fleet_trip_root"  sequence="2"/>
+
+</odoo>

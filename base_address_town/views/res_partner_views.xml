@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_partner_view_form_township" model="ir.ui.view">
+            <field name="name">view.res.partner.form.township</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_address_form"/>
+            <field name="priority" eval="6"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='city']" position="replace">
+
+                    <field name="town"  placeholder="Township" class="o_address_city" options='{"no_open": True}'/>
+                    <field name="city_id" placeholder="City" class="o_address_state " options='{"no_open": True}'/>
+                    <field name="city" invisible='1'/>
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="partner_view_form_township" model="ir.ui.view">
+            <field name="name">view.partner.form.township</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='city']" position="replace">
+
+                    <field name="town" class="o_address_city" placeholder="Township" options='{"no_open": True}'
+                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'city': city}"/>
+
+                    <field name="city_id" class="o_address_state" placeholder="City" options='{"no_open": True}'
+                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'state_id': state_id}"/>
+
+                    <field name="city" invisible='1'/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_partner_view_form_private_township" model="ir.ui.view">
+            <field name="name">res.partner.view.form.private.township</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_view_form_private"/>
+            <field name="priority" eval="300"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='city']" position="replace">
+
+                    <field name="town" class="o_address_city" placeholder="Township" options='{"no_open": True}' context="{'city_id': city_id}"/>
+                    <field name="city_id" class="o_address_state" placeholder="City" options='{"no_open": True}' context="{'state_id': state_id}"/>
+                    <field name="city" invisible='1'/>
+
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="vehicle_day_trip_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.day.trip.form</field>
+        <field name="model">fleet.vehicle.day.trip</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle Daily Movement Data" create="false" edit="false">
+                <field name="vehicle_id" invisible="1"/>
+                <group col="4" colspan="4">
+                    <field name="on_date" colspan="4" nolabel="1"/>
+                    <field name="trip" widget="google_map" nolabel="1" colspan="4"/>
+                </group>
+                <footer>
+                    <button string="Close" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_vehicle_day_trip_calendar">
+        <field name="model">fleet.vehicle.day.trip</field>
+        <field name="arch" type="xml">
+            <calendar string="Vehicle Trip Data" date_start="on_date" color="vehicle_id" quick_add="false" mode="month" event_open_popup="event_open_popup">
+                <field name="vehicle_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_vehicle_day_trip" model="ir.actions.act_window">
+        <field name="name">Vehicle Daily Movement</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">fleet.vehicle.day.trip</field>
+        <field name="view_id" ref="vehicle_day_trip_form"/>
+        <field name="view_mode">tree,form,calendar</field>
+    </record>
+
+</odoo>

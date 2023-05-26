@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_customer_visit_list" model="ir.ui.view">
+        <field name="name">partner.visit.logs.tree</field>
+        <field name="model">partner.visit.logs</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0" decoration-danger="state == 'invalid'">
+                <field name="partner_id"/>
+                <field name="visit_date_time"/>
+                <field name="vehicle_id"/>
+                <field name="visit_latitude"/>
+                <field name="visit_longitude"/>
+                <field name="visit_distance"/>
+                <field name="state" string="Status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_customer_visit_form" model="ir.ui.view">
+        <field name="name">view.res.partner.map</field>
+        <field name="model">partner.visit.logs</field>
+        <field name="arch" type="xml">
+            <form string="Visit logs" create="false" edit="false" delete="false">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+
+                    <group col="2">
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="visit_date_time"/>
+                            <field name="vehicle_id"/>
+                        </group>
+                        <group>
+                            <field name="visit_latitude"/>
+                            <field name="visit_longitude"/>
+                            <field name="visit_distance"/>
+                        </group>
+                    </group>
+                    <field name="map"
+                           readonly="0"
+                           widget="google_map"
+                           nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_customer_visits" model="ir.actions.act_window">
+        <field name="name">Customer Visits</field>
+        <field name="res_model">partner.visit.logs</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+        <field name="context">{}</field>
+    </record>    
+
+    <menuitem name="Customer Visits" action="action_customer_visits" id="menu_action_customer_visits" web_icon="yoma_gps_tracking,static/description/icon.png" />
+
+</odoo>

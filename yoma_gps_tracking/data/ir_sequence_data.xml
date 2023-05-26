@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <data noupdate="1">
+
+        <record id="customer_unique_sequence" model="ir.sequence">
+            <field name="name">customer_sequence</field>
+            <field name="code">res.partner</field>
+            <field name="prefix"></field>
+            <field name="padding">6</field>
+        </record>
+
+        <!-- Sequences for fleet.trip -->
+        <record id="seq_fleet_trip" model="ir.sequence">
+            <field name="name">Fleet Trip</field>
+            <field name="code">fleet.trip</field>
+            <field name="prefix">TP</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

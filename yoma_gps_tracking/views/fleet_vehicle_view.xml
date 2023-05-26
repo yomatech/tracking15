@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_fleet_vehicle_form_tracking" model="ir.ui.view">
+        <field name="name">Vehicle tracking form inherit</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="toggle_gps_tracking"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-truck"
+                            string="Tracking">
+                        <field name="gps_tracking"
+                               widget="boolean_toggle"
+                               options='{"terminology":
+                                                {
+                                                    "string_true": "Tracking",
+                                                    "hover_true": "Disable",
+                                                    "string_false": "Not tracking",
+                                                    "hover_false": "Enable"
+                                                }
+                                            }'/>
+                    </button>
+            </header>
+            <div name="button_box" position="inside">
+                <field name="vehicle_latitude"
+                           invisible="1"/>
+
+                <field name="vehicle_longitude"
+                           invisible="1"/>
+
+                <button name="action_show_day_trip"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-map-marker"
+                            string="Daily Movements"
+                            attrs="{'invisible': ['|',('vehicle_latitude', '=', 0.0), ('vehicle_longitude', '=', 0.0)]}"/>
+
+                <button string=""
+                        class="oe_stat_button"
+                        name="geo_localize"
+                        colspan="2"
+                        type="object"/>
+            </div>
+
+            <xpath expr="//field[@name='seats']"
+                   position="before">
+
+                <field name="traccar_uniqueID"
+                       attrs="{'readonly': [('gps_tracking', '=', True)],}"/>
+
+                <field name="traccar_device_id"
+                       readonly='1'/>
+
+                <field name="date_localization"
+                       readonly="1"/>
+
+                <field name="vehicle_latitude"
+                           readonly="1"/>
+
+                <field name="vehicle_longitude"
+                           readonly="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='driver_id']"
+                   position="after">
+
+                <field name="fleet_route"/>
+
+            </xpath>
+
+            <xpath expr="//field[@name='driver_id']"
+                   position="replace">
+
+                <field name="driver_id" domain="[('driver', '=', True)]"/>
+
+            </xpath>
+
+            <xpath expr="//sheet/field[@name='currency_id']" position="before">
+                <div class="ribbon ribbon-top-right">
+                    <span attrs="{'invisible': [('gps_tracking', '!=', False)]}" class="bg-warning"> Disabled Tracking </span>
+                    <span attrs="{'invisible': [('gps_tracking', '!=', True)]}" class="bg-success">Enabled Tracking</span>
+                </div>
+            </xpath>
+
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="Last Location"
+                              attrs="{'invisible': ['|',
+                              ('vehicle_latitude', '=', 0.0),
+                              ('vehicle_longitude', '=', 0.0)]}">
+
+                            <field name="bokeh_last_location"
+                                   readonly="1"
+                                   widget="google_map"
+                                   nolabel="1"/>
+                    </page>
+                    <page string="Visit Log">
+                        <field name="visit_log_ids">
+                            <tree decoration-danger="state == 'invalid'" create="0" delete="0">
+                                <field name="partner_id"/>
+                                <field name="visit_date_time"/>
+                                <field name="visit_latitude"/>
+                                <field name="visit_longitude"/>
+                                <field name="visit_distance"/>
+                                <field name="state" string="Status"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Trip Log">
+                        <field name="trips">
+                            <tree decoration-success="state == 'running'"
+                                  decoration-info="state == 'done'"
+                                  decoration-danger="state == 'cancelled'"
+                                  create="0"
+                                  delete="0">
+                                <field name="name"/>
+                                <field name="driver"/>
+                                <field name="fleet_route" />
+                                <field name="start_date" />
+                                <field name="end_date" />
+                                <field name="state" />
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="fleet.fleet_vehicle_action" model="ir.actions.act_window">
+        <field name="view_mode">kanban,tree,form,pivot,activity</field>
+    </record>
+
+    <record id="view_fleet_vehicle_search_tracking" model="ir.ui.view">
+        <field name="name">Fleet Vehicle search inherit</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='alert_true']" position="after">
+                <separator/>
+                <filter name="tracking" string="Tracking Vehicles" domain="[('gps_tracking','=', True)]"
+                        help="Vehicles Being Tracked by GPS"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

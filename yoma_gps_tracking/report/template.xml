@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="customer_qrcode_template">
+            <t t-call="web.basic_layout">
+                <style>
+                    .page {
+                        padding: 20px;
+                        font-size: 18px;
+                    }
+                    .h1 {
+                        font-size: 30px;
+                        font-weight: bold;
+                    }
+                    .h2 {
+                        font-size: 20px;
+                        font-weight: bold;
+                    }
+                </style>
+                <t t-foreach="docs" t-as="record">
+                    <div class="page">
+                        <center>
+                            <div class="h1"><span t-esc="record.name" /></div>
+                            <div><img width="460" height="460" t-att-src="'data:image/png;base64,%s' % to_text(record.qr_code)" /></div>
+                            <div class="h2"><span t-esc="record.unique_sequence" /></div>
+                            <div><span t-esc="record.street"/></div>
+                            <div><span t-esc="record.street2"/></div>
+                            <div><span t-esc="record.state_id.name"/> <span t-esc="record.country_id.name"/> - <span t-esc="record.zip"/></div>
+                        </center>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

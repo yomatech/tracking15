@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <record id='fleet_trip_view_form' model='ir.ui.view'>
+        <field name="name">fleet.trip.form</field>
+        <field name="model">fleet.trip</field>
+        <field name="arch" type="xml">
+            <form string="Trip">
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="DRAFT"
+                            bg_color="bg-light"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <widget name="web_ribbon" title="RUNNING"
+                            bg_color="bg-success"
+                            attrs="{'invisible': [('state', '!=', 'running')]}"/>
+                    <widget name="web_ribbon" title="DONE"
+                            bg_color="bg-info"
+                            attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                    <widget name="web_ribbon" title="CANCELLED"
+                            bg_color="bg-warning"
+                            attrs="{'invisible': [('state', '!=', 'cancelled')]}"/>
+
+                    <div class="oe_title">
+
+                        <h1>
+                            <field name="name"
+                                   readonly="1" attrs="{'invisible': [('name', '=', False)]}"/>
+                        </h1>
+                    </div>
+
+                    <group>
+
+                        <group>
+
+                            <field name="vehicle"
+                                   attrs="{'readonly': [
+                                   ('state','in', ['running', 'done', 'cancelled'])]}" />
+                            <field name="driver"
+                                   attrs="{'readonly': [
+                                   ('state','in', ['running', 'done', 'cancelled'])]}"/>
+                            <field name="fleet_route"
+                                   attrs="{'readonly': [
+                                   ('state','in', ['running', 'done', 'cancelled'])]}"/>
+
+                        </group>
+
+                        <group>
+
+                            <field name="start_date"
+                                   attrs="{'readonly': [
+                                   ('state','in', ['running', 'done', 'cancelled'])]}"/>
+                            <field name="end_date"
+                                   attrs="{'readonly': [
+                                   ('state','in', ['done', 'cancelled'])]}"/>
+
+                        </group>
+
+                    </group>
+
+                    <notebook colspan="2">
+                        <page string="Way Points"
+                              attrs="{'invisible': [
+                              ('fleet_route','=', False)
+                              ]}">
+                            <field name="partner_ids"
+                                   colspan="4"
+                                   nolabel="1"
+                                   readonly="1"
+                                   widget="many2many"
+                                   context="{'tree_view_ref': 'view_way_points_tree'}"
+                                   options="{'no_open':True,'no_create':1,'no_create_edit':1}">
+                            </field>
+                            <field name="map"
+                                   readonly="1"
+                                   widget="google_map"
+                                   nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='fleet_trip_view_tree' model='ir.ui.view'>
+        <field name="name">fleet.trip.tree</field>
+        <field name="model">fleet.trip</field>
+        <field name="arch" type="xml">
+            <tree string="Trip Planner"
+                  decoration-success="state == 'running'"
+                  decoration-info="state == 'done'"
+                  decoration-warning="state == 'cancelled'"
+                  decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="vehicle"/>
+                <field name="driver"/>
+                <field name="fleet_route" />
+                <field name="start_date" />
+                <field name="end_date" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id='fleet_trip_action' model='ir.actions.act_window'>
+        <field name="name">Vehicle Trip</field>
+        <field name="res_model">fleet.trip</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_fleet_trip_root" parent="fleet.menu_root" sequence="80" name="Trips"/>
+
+    <menuitem id="menu_fleet_trip" parent="menu_fleet_trip_root" sequence="1" name="Trips" action="fleet_trip_action"/>
+
+</odoo>
