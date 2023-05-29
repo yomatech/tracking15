@@ -50,7 +50,9 @@ Track your vehicles with the free and open source Traccar solution.
             'yoma_gps_tracking/static/src/js/calendar_prevent_create.js'
         ]
     },
-
+    'external_dependencies': {
+        'python': ['geopy'],
+    },
     'demo': [],
     'installable': True,
     'application': True,

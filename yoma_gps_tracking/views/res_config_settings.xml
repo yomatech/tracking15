@@ -126,6 +126,9 @@
                     </div>
                 </div>
             </xpath>
+            <xpath expr="//div[@name='web_google_maps']" position="replace">
+                <p/>
+            </xpath>
         </field>
     </record>
 

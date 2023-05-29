@@ -174,11 +174,12 @@ var FieldMap = AbstractField.extend({
                     '<div  id="content" class="o_kanban_view o_res_partner_kanban o_kanban_ungrouped">'+
                         '<div class="oe_kanban_details d-flex flex-column">'+
                             '<strong id="firstHeading" class="o_kanban_record_title">'+
-                                '<span>'+parsedMarker.info+'</span>'+
+                                (parsedMarker.info ? '<span>'+parsedMarker.info+', '+'</span>': '')+
                             '</strong>' +
                             '<ul id="bodyContent" class="list-group list-group-flush">'+
-                                '<li class="list-group-flush-item">'+parsedMarker.city+', '+parsedMarker.country_id+'</li>'+
-                                '<li class="list-group-flush-item">'+parsedMarker.email+'</li>'+
+                                (parsedMarker.city ? '<li class="list-group-flush-item">'+parsedMarker.city+', '+'</li>': '')+
+                                (parsedMarker.country_id ? '<li class="list-group-flush-item">'+parsedMarker.country_id+', '+'</li>': '')+
+                                (parsedMarker.email ? '<li class="list-group-flush-item">'+parsedMarker.email+', '+'</li>': '')+
                             '</ul>'+
                         '</div>'+
                     '</div>');
