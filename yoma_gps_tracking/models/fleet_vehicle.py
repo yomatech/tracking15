@@ -393,7 +393,8 @@ class FleetVehicleDayTrip(models.TransientModel):
             match_trip = self.env['fleet.trip'].search([
                 ('vehicle', '=', self.vehicle_id.id),
                 ('start_date', '>=', from_input_date_utc),
-                ('start_date', '<=', to_input_date_utc)
+                ('start_date', '<=', to_input_date_utc),
+                ('state', 'not in', ['draft', 'cancelled'])
             ], limit=1)
 
             visited_logs = self.env['partner.visit.logs'].search([
