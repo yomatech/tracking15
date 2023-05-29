@@ -322,43 +322,44 @@ class FleetVehicle(models.Model):
             return
 
         res = None
-        try:
-            records_to_schedule.geo_localize()
-            res = True
-        except Exception:
-            raise exceptions.UserError(_(Exception))
+        for record in records_to_schedule:
+
+            try:
+                record.geo_localize()
+                res = True
+            except Exception:
+                res = False
         return res
 
     def action_show_day_trip(self):
-        for vehicle in self:
-
-            context = vehicle.env.context.copy()
-            context['default_vehicle_id'] = vehicle.id
-            new_ids = []
-            all_dates = []
-            all_location_records = vehicle.env['fleet.vehicle.location.history'].search(
-                [('vehicle_id', '=', vehicle.id), ('date_localization', '!=', False), ('vehicle_latitude', '!=', 0),
-                 ('vehicle_longitude', '!=', 0)], order='date_localization desc')
-            if all_location_records:
-                for day in all_location_records:
-                    last_date = day.date_localization.date()
-                    if last_date not in all_dates:
-                        all_dates.append(last_date)
-                        new_id = vehicle.env['fleet.vehicle.day.trip'].create({'vehicle_id': vehicle.id, 'on_date': last_date})
-                        if new_id:
-                            new_ids.append(new_id.id)
-            view_id = vehicle.env.ref('yoma_gps_tracking.view_vehicle_day_trip_calendar')
-            return {
-                'name': _('Daily Trip Data'),
-                'type': 'ir.actions.act_window',
-                'res_model': 'fleet.vehicle.day.trip',
-                'view_mode': 'calendar',
-                'view_type': 'calendar',
-                'target': 'current',
-                'views': [(view_id.id, 'calendar')],
-                'context': context,
-                'domain': [('id', 'in', new_ids)]
-            }
+        self.ensure_one()
+        context = self.env.context.copy()
+        context['default_vehicle_id'] = self.id
+        new_ids = []
+        all_dates = []
+        all_location_records = self.env['fleet.vehicle.location.history'].search(
+            [('vehicle_id', '=', self.id), ('date_localization', '!=', False), ('vehicle_latitude', '!=', 0),
+             ('vehicle_longitude', '!=', 0)], order='date_localization desc')
+        if all_location_records:
+            for day in all_location_records:
+                last_date = day.date_localization.date()
+                if last_date not in all_dates:
+                    all_dates.append(last_date)
+                    new_id = self.env['fleet.vehicle.day.trip'].create({'vehicle_id': self.id, 'on_date': last_date})
+                    if new_id:
+                        new_ids.append(new_id.id)
+        view_id = self.env.ref('yoma_gps_tracking.view_vehicle_day_trip_calendar')
+        return {
+            'name': _('Daily Trip Data'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'fleet.vehicle.day.trip',
+            'view_mode': 'calendar',
+            'view_type': 'calendar',
+            'target': 'current',
+            'views': [(view_id.id, 'calendar')],
+            'context': context,
+            'domain': [('id', 'in', new_ids)]
+        }
 
 
 class FleetVehicleDayTrip(models.TransientModel):
