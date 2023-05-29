@@ -127,7 +127,8 @@ class FleetTrip(models.Model):
                             json_str_point = json.dumps({
                                 u'lat': float(point.vehicle_latitude),
                                 u'lng': float(point.vehicle_longitude),
-                                u'info': point.driver_name + ' - ' + (fixTime.strftime("%Y-%m-%d %H:%M:%S") or '')
+                                u'info': point.driver_name + ' - ' + '%s' % (fixTime.strftime("%Y-%m-%d %H:%M:%S") or '')
+
                             })
 
                             waypoints.append(json_str_point)
